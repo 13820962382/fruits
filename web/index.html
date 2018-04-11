@@ -34,38 +34,31 @@
     </nav>
 </div>
 
-<div class="container">
-    <!--首页选项卡按钮-->
-    <ul id="myTab" class="nav nav-tabs">
-        <!--首页选项卡按钮-->
-        <div class="dropdown">
-            <button type="button" class="btn dropdown-toggle" id="dropdownMenu1"
-                    data-toggle="dropdown">
-                主题
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                <li role="presentation" >
-                    <a role="menuitem" tabindex="-1" href="#">Java</a>
-                </li>
-                <li role="presentation">
-                    <a role="menuitem" tabindex="-1" href="#">数据挖掘</a>
-                </li>
-                <li role="presentation">
-                    <a role="menuitem" tabindex="-1" href="#">
-                        数据通信/网络
-                    </a>
-                </li>
-                <li role="presentation">
-                    <a role="menuitem" tabindex="-1" href="#">分离的链接</a>
-                </li>
-            </ul>
+<div class="container main">
+    <div class="row">
+        <!--左边导航栏-->
+        <div class="col-sm-2" id="main-left-cloumn">
+            <div class="span8">
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="active">
+                        <a href="#">Home</a>   </li>
+                    <li><a href="#">Tutorials</a></li>
+                    <li><a href="#">Practice Editor </a></li>
+                    <li><a href="#">Gallery</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
         </div>
 
+    <!--首页选项卡按钮-->
+        <div class="col-sm-10" id="meddle-column-home">
+    <ul id="myTab" class="nav nav-tabs">
+        <!--首页选项卡按钮-->
         <li class="active"><a href="#home" data-toggle="tab">
             首页</a>
         </li>
         <li><a href="#ios" data-toggle="tab">推荐</a></li>
+
         <li class="dropdown">
             <a href="#" id="myTabDrop1" class="dropdown-toggle"
                data-toggle="dropdown">商城 <b class="caret"></b>
@@ -82,6 +75,7 @@
     </ul>
     <!--选项卡内容-->
     <div id="myTabContent" class="tab-content">
+
 
         <div class="tab-pane fade in active" id="home">
             <!--轮播图-->
@@ -116,7 +110,9 @@
                     <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                     <span class="sr-only">Next</span>
                 </a>
-            </div>
+
+            </div><!--轮播结束-->
+
         </div>
         <div class="tab-pane fade" id="ios">
             <p>iOS is a mobile operating system developed and distributed by Apple
@@ -136,16 +132,16 @@
                 Application Server such as JBOSS, Web Logic etc.
             </p>
         </div>
-    </div>
-
-
+    </div><!--tab结束-->
+        </div><!--左边内容结束-->
+    </div><!--row结束-->
 
 </div>
 
 <script>
     <!--选项卡-->
     $(function () {
-        $('#myTab li:eq(1) a').tab('show');
+        $('#myTab li:eq(0) a').tab('show');
     });
 </script>
 </body>
