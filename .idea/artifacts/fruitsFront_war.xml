@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="fruitsFront:war">
+    <output-path>$PROJECT_DIR$/out/artifacts/fruitsFront_war</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="fruitsFront/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="fruitsFront" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
