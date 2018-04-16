@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -58,7 +59,7 @@
 
     </div> <!--导航栏结束-->
 
-    <div class="poplur" style="display:none; position:absolute;margin-left:185px; margin-top:140px;z-index:1" >
+    <div class="poplur" id="nav-inner" style="display:none; position:absolute;margin-left:185px; margin-top:140px;z-index:1" >
       <ul class="list-group">
         <li class="list-group-item">免费域名注册</li>
         <li class="list-group-item">免费 Window 空间托管</li>
@@ -177,7 +178,36 @@
 
   </footer>
 </div>
+<script>
+    $.ajax({
+        type:"get",
+        dataType: "json",
+        url:"/get.action",
+        beforeSend:function () {
 
+        },
+        success:function (data) {
+            var json = eval(data.data)
+            // var jsonArray = eval(data.data.fruitsList)
+            $.each(json,function (i, item) {
+                var categoryName = json[i].categoryName;//获取分类名称
+                // $("#nav-left > li").html("获取水果列表")
+                alert("请求数据成功---"+categoryName+" : "+fruitName);
+                var fruits = json[i].fruitsList;//获取水果列表
+                // $.each(fruits,function(j,item){
+                //     var fruitName = fruits[j].fruitsName;
+                //     // $("#nav-inner > li").html(fruitName)
+                //     alert("请求数据成功---"+categoryName+" : "+fruitName);
+                // });
+
+            });
+            // alert("请求数据成功"+data.data.categoryName)
+        },
+        error:function () {
+            alert("请求数据失败")
+        }
+    })
+</script>
 <script>
     <!--选项卡-->
     $(function () {
