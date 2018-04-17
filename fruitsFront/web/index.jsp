@@ -1,4 +1,4 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%--<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>--%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -43,32 +43,21 @@
 <div class="container main">
   <div class="row">
     <!--左边导航栏-->
-    <div class="col-md-2" id="main-left-cloumn" style="position:relative">
-      <div class="span8" >
-        <ul class="nav nav-pills nav-stacked" id="nav-left">
-          <img src="images/53df28fe7da1e.jpg" alt="">
+    <div class="col-md-2" id="main-left-cloumn" style="position:relative" >
+      <div class="span8" style="position:absolute; z-index:1; width:202px">
+        <img src="images/53df28fe7da1e.jpg" alt="">
+        <ul class="nav nav-pills nav-stacked" id="nav-left" style="width:202px">
           <li>
-            <a href="#">Home</a>
+              <a href="#">Home</a>
           </li>
-          <li><a href="#">Tutorials</a></li>
-          <li><a href="#">Practice Editor </a></li>
-          <li><a href="#">Gallery</a></li>
-          <li><a href="#">Contact</a></li>
         </ul>
       </div>
 
     </div> <!--导航栏结束-->
 
-    <div class="poplur" id="nav-inner" style="display:none; position:absolute;margin-left:185px; margin-top:140px;z-index:1" >
-      <ul class="list-group">
-        <li class="list-group-item">免费域名注册</li>
-        <li class="list-group-item">免费 Window 空间托管</li>
-        <li class="list-group-item">图像的数量</li>
-        <li class="list-group-item">
-          <span class="badge">新</span>
-          24*7 支持
-        </li>
-        <li class="list-group-item">每年更新成本</li>
+    <!-- 弹出菜单-->
+    <div class="poplur"id="popList" style="margin-left:202px;margin-top:135px; position:absolute; z-index:2;width: 125px" >
+      <ul class="list-group" style="">
         <li class="list-group-item">
           <span class="badge">新</span>
           折扣优惠
@@ -187,13 +176,17 @@
 
         },
         success:function (data) {
-            var json = eval(data.data)
-            // var jsonArray = eval(data.data.fruitsList)
+            // var json = eval(data.data)
+            var json = [{"categoryName":"15415"},{"categoryName":"浆果"},{"categoryName":"仁果"},{"categoryName":"果果"},{"categoryName":"瓜果"},]
             $.each(json,function (i, item) {
                 var categoryName = json[i].categoryName;//获取分类名称
-                // $("#nav-left > li").html("获取水果列表")
+                var navLeft = document.getElementById("nev-left")//获取ul对象
+                var navLis = navLeft.getElementsByTagName("li"); //获取ul下li对象数组
+                for(var s=0;s<navLis.length;s++){
+                    navLis[i].innerHTML="<a>"+categoryName+"</a>"
+                }
                 alert("请求数据成功---"+categoryName+" : "+fruitName);
-                var fruits = json[i].fruitsList;//获取水果列表
+                // var fruits = json[i].fruitsList;//获取水果列表
                 // $.each(fruits,function(j,item){
                 //     var fruitName = fruits[j].fruitsName;
                 //     // $("#nav-inner > li").html(fruitName)
@@ -204,36 +197,46 @@
             // alert("请求数据成功"+data.data.categoryName)
         },
         error:function () {
-            alert("请求数据失败")
+
+            var json = {"data":[{"fruitsList":[{"fruitsName":"哥廷根WEG","fruitsDes":"SFQ1","fruitsImg":"http://kidle.club:8080/upload/Hydrangeas.jpg","categoryName":"浆果类"},{"fruitsName":"葡萄","fruitsDes":"","fruitsImg":"http://kidle.club:8080/upload/banner1.jpg","categoryName":"浆果类"}],"categoryName":"浆果类","totalFruits":2,"categoryId":1},{"fruitsList":[{"fruitsName":"儿t沙发沙发","fruitsDes":"千万人","fruitsImg":"http://kidle.club:8080/upload/Tulips.jpg","categoryName":"仁果类"},{"fruitsName":"儿t沙发沙发","fruitsDes":"千万人","fruitsImg":"http://kidle.club:8080/upload/Tulips.jpg","categoryName":"仁果类"},{"fruitsName":"儿t沙发沙发","fruitsDes":"千万人","fruitsImg":"http://kidle.club:8080/upload/Tulips.jpg","categoryName":"仁果类"},{"fruitsName":"示范法","fruitsDes":"萨法","fruitsImg":"http://kidle.club:8080/upload/Hydrangeas.jpg","categoryName":"仁果类"}],"categoryDes":"仁果类","categoryName":"仁果类","totalFruits":4,"categoryId":3},{"fruitsList":[{"fruitsName":"阿发","fruitsDes":"","fruitsImg":"http://kidle.club:8080/upload/积分会员卄1�7-图标-1.png","categoryName":"默认无分类"}],"categoryName":"默认无分类","totalFruits":1,"categoryId":5},{"fruitsList":[{"fruitsName":"%E9%8F%84%EE%88%9A%E6%83%81%E9%8D%9A%EF%B9%81%E5%AB%99%E7%80%B5%E5%B2%83%E5%90%B9","fruitsDes":"","fruitsImg":"http://kidle.club:8080/upload/%E7%BB%89%EE%88%9A%E5%9E%8E%E6%B5%BC%E6%B0%AC%E6%86%B3%E9%8D%97%EF%BF%BD-%E9%8D%A5%E7%82%AC%E7%88%A3-1.png","categoryName":"默认无分类"}],"categoryName":"默认无分类","totalFruits":1,"categoryId":7},{"fruitsList":[{"fruitsName":"?��?","fruitsDes":"","fruitsImg":"http://kidle.club:8080/upload/�??�??宣�?.jpg","categoryName":"默认无分类"}],"categoryName":"默认无分类","totalFruits":1,"categoryId":9},{"fruitsList":[],"categoryDes":"丰田","categoryName":"挂示范区","totalFruits":0,"categoryId":15}]};
+            $.each(json.data,function (i, item) {
+                var categoryName = json.data[i].categoryName;//获取分类名称
+
+                $("#nav-left").append("<li><a href=\"#\">"+categoryName+"</a><li>")
+                //获取水果列表
+                var fruits = json.data[i].fruitsList;
+                //鼠标悬停显示菜单
+                $("#nav-left > li").hover(function(){
+                    $(this).addClass("active")
+                    $(".poplur").show()
+
+                    // $(".list-group").append("<li class=\"list-group-item\">"+fruits[index].fruitsName+"</li>")
+
+                },function () {
+                    $(this).removeClass("active")
+                    $(".poplur").hide()
+                })
+                //鼠标悬停显示二级菜单
+                $(".poplur").hover(function () {
+                    $(".poplur").show()
+
+                },function () {
+                    $(".poplur").hide()
+
+                })
+
+
+            });
+            alert("请求数据失败"+json[i])
         }
     })
 </script>
+
 <script>
     <!--选项卡-->
     $(function () {
         $('#myTab li:eq(0) a').tab('show');
     });
-
-    //鼠标悬停显示菜单
-    $("#nav-left > li").hover(function(){
-        $(this).addClass("active")
-        $(".poplur").css("display","block")
-        //动态设置弹出框的高度
-        var marginHeight = parseInt($(".poplur").css("margin-top").split("px"));
-        var liHeight = parseInt($(this).css("height").split("px"));
-        //获取鼠标悬停在第几个li
-        var li  = $(this).index();
-        var poplurHeigth = (liHeight*li) + marginHeight;
-
-        //$(".poplur").css("margin-top",poplurHeigth)
-    })
-
-    //鼠标移开隐藏菜单
-    $("#nav-left > li").mouseout(function(){
-        $(this).removeClass("active")
-        $(".poplur").css("display","none")
-        //$(".poplur").css("margin-top","140px")
-    })
 
 </script>
 </body>
