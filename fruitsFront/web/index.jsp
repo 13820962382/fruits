@@ -48,20 +48,7 @@
         <img src="images/53df28fe7da1e.jpg" alt="">
         <ul class="nav nav-pills nav-stacked" id="nav-left" style="width:202px">
 
-          <c:forEach items="${categoryList}" var="category">
-          <li>
-            <!-- 弹出菜单-->
-            <div class="poplur"id="popList" style="margin-left:202px; display: none;position:absolute; z-index:2;width: 125px" >
-              <ul class="list-group" >
-                <li class="list-group-item">
-                  ${category.categoryName}
-                </li>
-              </ul>
-            </div>
 
-              <a href="#">${category.categoryName}</a>
-          </li>
-          </c:forEach>
         </ul>
       </div>
 
@@ -187,44 +174,53 @@
         type:"get",
         dataType: "json",
         url:"http://kidle.club:8080/fruitsmanager/get.action",
-        beforeSend:function () {
-
-        },
-        error:function (data) {
+        success:function (data) {
+            var json = data.data
             $.each(json,function (i, item) {
-                var categoryName = json[i].categoryName;//获取分类名称
-                // $("#nav-left").append("<li><a href=\"#\">"+categoryName+"</a></li>")
 
-                //鼠标悬停显示菜单
-                $("#nav-left > li").hover(function(){
-                    $(this).addClass("active")
-                    $(".poplur").show()
-                    currentLi = $(this).index();
-
-                },function () {
-                    $(this).removeClass("active")
-                    $(".poplur").hide()
-                })
-                //鼠标悬停显示二级菜单
-                $(".poplur").hover(function () {
-                    $(".poplur").show()
-
-                },function () {
-                    $(".poplur").hide()
-
-                })
-
-
+                $("#nav-left").append(" <div class=\"poplur\"id=\"popList\" style=\"margin-left:202px; display: none;position:absolute; z-index:2;width: 125px\" >\n" +
+                    "              <ul class=\"list-group\" id='"+i+"'>" +
+                    "              </ul>\n" +
+                    "            </div>" +
+                    "<li><a href=\"#\">"+item.categoryName+"</a></li>")
             });
-           /* var fruits = json[1].fruitsList;//获取水果列表
-            for(var index=0;index<fruits.length;index++){
-                if (isFirst==true){
-                    $(".list-group").append("<li class=\"list-group-item\">"+fruits[index].fruitsName+"</li>")
-                    isFirst=false
+
+
+
+            //鼠标悬停显示菜单
+            $("#nav-left > li").hover(function(){
+                var current = ($(this).index()-1)/2;
+                for(var j = 0;j<json.length;j++){
+                    if($("#"+j).find("li").length!=0){
+                        isFirst = false
+                    }
+                  if((json[current].fruits).length!=0&&isFirst==true){
+                    for(var s =0;s<(json[current].fruits).length;s++){
+                        $("#"+j).append("<li class=\"list-group-item\">"+json[current].fruits[s].fruitsName+"</li>")
+                      // alert($(this).index())
+                    }
+
+                  }
                 }
-            }*/
+
+                $(this).addClass("active")
+                $(".poplur").show()
+
+
+            },function () {
+                $(this).removeClass("active")
+                $(".poplur").hide()
+            })
+            //鼠标悬停显示二级菜单
+            $(".poplur").hover(function () {
+                $(".poplur").show()
+
+            },function () {
+                $(".poplur").hide()
+
+            })
         },
-        success:function () {
+        error:function () {
             alert("请求数据失败"+json[i])
         }
     })
