@@ -54,16 +54,6 @@
 
     </div> <!--导航栏结束-->
 
-    <%--<!-- 弹出菜单-->
-    <div class="poplur"id="popList" style="margin-left:202px;margin-top:135px; display: none;position:absolute; z-index:2;width: 125px" >
-      <ul class="list-group" >
-        <li class="list-group-item">
-          <span class="badge">新</span>
-          折扣优惠
-        </li>
-      </ul>
-    </div>--%>
-
     <!--首页选项卡按钮-->
     <div class="col-md-9" id="meddle-column-home" >
       <ul id="myTab" class="nav nav-tabs">
@@ -124,7 +114,9 @@
             </a>
 
           </div><!--轮播结束-->
-          <img src="http://kidle.club:8080/upload/apple.jpg" class="img-responsive" alt="Cinque Terre">
+
+          <img class="img-responsive" id="fruitsImg" alt="Cinque Terre" src="http://kidle.club:8080/upload/apple.jpg" >
+
         </div>
         <div class="tab-pane fade" id="ios">
           <p>iOS is a mobile operating system developed and distributed by Apple
@@ -169,6 +161,7 @@
 <script>
     var isFirst = true;
     var currentLi;
+    var fruitsList;
 
     $.ajax({
         type:"get",
@@ -178,52 +171,73 @@
             var json = data.data
             $.each(json,function (i, item) {
 
-                $("#nav-left").append(" <div class=\"poplur\"id=\"popList\" style=\"margin-left:202px; display: none;position:absolute; z-index:2;width: 125px\" >\n" +
-                    "              <ul class=\"list-group\" id='"+i+"'>" +
-                    "              </ul>\n" +
-                    "            </div>" +
-                    "<li><a href=\"#\">"+item.categoryName+"</a></li>")
+                $("#nav-left").append(" <div class='poplur' id='div"+i+"' style=\"margin-left:202px; position:absolute; z-index:2;width: 125px\" >\n" +
+                                            "<ul class='nav nav-pills nav-stacked' id='list"+i+"' style='display: none; background-color: white'></ul>" +
+                                        "</div>" +
+                                        "<li><a href='#' >"+item.categoryName+"</a></li>")
             });
 
 
 
             //鼠标悬停显示菜单
             $("#nav-left > li").hover(function(){
-                var current = ($(this).index()-1)/2;
+                currentLi = ($(this).index()-1)/2;
+
                 for(var j = 0;j<json.length;j++){
-                    if($("#"+j).find("li").length!=0){
+                    fruitsList = json[currentLi].fruits
+
+                    if($("#list"+j).find("li").length!=0){
                         isFirst = false
                     }
-                  if((json[current].fruits).length!=0&&isFirst==true){
-                    for(var s =0;s<(json[current].fruits).length;s++){
-                        $("#"+j).append("<li class=\"list-group-item\">"+json[current].fruits[s].fruitsName+"</li>")
-                      // alert($(this).index())
-                    }
+                    if((json[j].fruits).length!=0&&isFirst==true){
 
-                  }
+                        for(var s =0;s<(json[j].fruits).length;s++){
+                            $("#list"+j).append("<li><a class='chang' href=\"#\" onclick='changImg()'>"+json[j].fruits[s].fruitsName+"</a></li>")
+                        }
+
+                    }
                 }
 
+
                 $(this).addClass("active")
-                $(".poplur").show()
+                $("#div"+currentLi).show()
+                $("#list"+currentLi).show()
 
 
             },function () {
                 $(this).removeClass("active")
-                $(".poplur").hide()
+                $("#list"+currentLi).hide()
+
             })
+
             //鼠标悬停显示二级菜单
             $(".poplur").hover(function () {
-                $(".poplur").show()
+                $("#list"+currentLi).show()
 
             },function () {
-                $(".poplur").hide()
-
+                $("#list"+currentLi).hide()
             })
+
         },
         error:function () {
             alert("请求数据失败"+json[i])
         }
     })
+
+    //切换图片
+    function changImg() {
+        $(".chang").click(function () {
+
+            for (var i = 0;i<fruitsList.length;i++){
+               if (fruitsList[i].fruitsName==$(this).text()){
+                   $("#fruitsImg").attr("src",fruitsList[i].fruitsImg)
+                   // alert(fruitsList[i].fruitsImg)
+               }
+            }
+
+        })
+    }
+
 </script>
 
 <script>
