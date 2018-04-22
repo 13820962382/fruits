@@ -3,30 +3,50 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-  <title>Bootstrap 实例</title>
-  <head>
     <meta charset="utf-8">
-    <title>Bootstrap 实例 - 轮播（Carousel）插件的标题</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  </head>
-  <style>
-    body{
+  <script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+    <title>水果专家</title>
 
-    }
-    .col-md-9{
-      margin-left:10px
-    }
-  </style>
+    <style>
+      html{
+        font-size: 16px;
+      }
+      .col-md-9{
+        margin-left:10px
+      }
+
+      /*电脑端 隐藏手机端的菜单*/
+      @media screen and (min-width: 1204px){
+        html{
+          font-size: 36px;
+        }
+        #phone-column{
+          display: none;
+        }
+      }
+
+      /*手机端隐藏电脑端的菜单*/
+      @media screen and (max-width: 1203px){
+        html{
+          font-size: 36px;
+        }
+        #main-left-cloumn{
+          display: none;
+        }
+      }
+
+    </style>
 </head>
 <body>
 <!--注册登录-->
 <nav class="navbar navbar-default" role="navigation">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">菜鸟教程</a>
+      <a class="navbar-brand" href="#">水果专家</a>
     </div>
     <ul class="nav navbar-nav navbar-right">
       <li><a href="#"><span class="glyphicon glyphicon-user"></span> 注册</a></li>
@@ -46,7 +66,7 @@
     <div class="col-md-2" id="main-left-cloumn" style="position:relative" >
       <div class="span8" style="position:absolute; z-index:1; width:202px; border: #f2dede solid 1px">
         <img src="images/53df28fe7da1e.jpg" alt="">
-        <ul class="nav nav-pills nav-stacked" id="nav-left" style="width:202px">
+        <ul class="nav nav-pills nav-stacked" id="nav-left">
 
 
         </ul>
@@ -57,7 +77,16 @@
     <!--首页选项卡按钮-->
     <div class="col-md-9" id="meddle-column-home" >
       <ul id="myTab" class="nav nav-tabs">
-        <!--首页选项卡按钮-->
+        <!--适配手机端的菜单-->
+        <li class="dropdown" id="phone-column">
+          <a href="#" id="phoneTab" class="dropdown-toggle"
+             data-toggle="dropdown">水果分类 <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu" id="phone-nav-item" role="menu" aria-labelledby="phoneTab">
+
+          </ul>
+        </li><!--适配手机端的菜单结束-->
+
         <li class="active"><a href="#home" data-toggle="tab">
           首页</a>
         </li>
@@ -141,7 +170,7 @@
   </div><!--row结束-->
 
   <footer>
-    <div class="btm_txt_left">王永俊　版权所有</div>
+    <div class="btm_txt_left">王永俊 陈忠蔚　版权所有</div>
     <div class="btm_txt_right">
 
       <a href="/index.php?s=/Home/Article/cat/name/ENTERPRISE.html">关于我们</a>
@@ -162,6 +191,17 @@
     var isFirst = true;
     var currentLi;
     var fruitsList;
+    var userAgent = window.navigator.userAgent;
+    var click;
+    var agents = ["ipad","iphone","android"]
+    var isMobile
+    for (var i = 0;i < agents.length;i++){
+        if (userAgent.indexOf(agents[i])){
+            isMobile = true;
+        }else {
+            isMobile = false;
+        }
+    }
 
     $.ajax({
         type:"get",
@@ -171,10 +211,18 @@
             var json = data.data
             $.each(json,function (i, item) {
 
-                $("#nav-left").append(" <div class='poplur' id='div"+i+"' style=\"margin-left:202px; position:absolute; z-index:2;width: 125px\" >\n" +
-                                            "<ul class='nav nav-pills nav-stacked' id='list"+i+"' style='display: none; background-color: white'></ul>" +
-                                        "</div>" +
-                                        "<li><a href='#' >"+item.categoryName+"</a></li>")
+                    //适配手机端的分类
+                    $("#phone-nav-item").append(" <div class='poplur' id='phone_div"+i+"' style=\"margin-left:202px; position:absolute; z-index:2;width: 125px\" >\n" +
+                        "<ul class='nav nav-pills nav-stacked' id='phone_list"+i+"' style=''>" +
+                        "</ul>" +
+                        "</div>" +
+                        "<li><a href='#' >"+item.categoryName+"</a></li>")
+
+                    $("#nav-left").append(" <div class='poplur' id='div"+i+"' style=\"margin-left:202px; position:absolute; z-index:2;width: 125px\" >\n" +
+                        "<ul class='nav nav-pills nav-stacked' id='list"+i+"' style='display:none;background-color: white'></ul>" +
+                        "</div>" +
+                        "<li><a href='#' >"+item.categoryName+"</a></li>")
+
             });
 
 
@@ -193,6 +241,9 @@
 
                         for(var s =0;s<(json[j].fruits).length;s++){
                             $("#list"+j).append("<li><a class='chang' href=\"#\" onclick='changImg()'>"+json[j].fruits[s].fruitsName+"</a></li>")
+
+                            $("#phone_list"+j).append("<li><a class='chang' href=\"#\" onclick='changImg()'>"+json[j].fruits[s].fruitsName+"</a></li>")
+
                         }
 
                     }
@@ -226,8 +277,18 @@
 
     //切换图片
     function changImg() {
-        $(".chang").click(function () {
 
+        //判读是否是移动端
+        if (isMobile){
+            click = "click"
+            alert(click)
+        }else {
+            click ="tap"
+
+            alert(click)
+        }
+
+        $('body').on(click,".chang",function () {
             for (var i = 0;i<fruitsList.length;i++){
                if (fruitsList[i].fruitsName==$(this).text()){
                    $("#fruitsImg").attr("src",fruitsList[i].fruitsImg)
@@ -245,6 +306,7 @@
     $(function () {
         $('#myTab li:eq(0) a').tab('show');
     });
+
 
 </script>
 </body>
