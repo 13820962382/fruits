@@ -244,6 +244,7 @@
                     for (var i = 0;i<fruitsList.length;i++){
                         if (fruitsList[i].fruitsName==$(this).text()){
                             $("#fruitsImg").attr("src",fruitsList[i].fruitsImg)
+                            $(this).hide()
 
 
                         }
