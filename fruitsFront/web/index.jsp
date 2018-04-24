@@ -6,9 +6,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
     <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+    <script src="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <title>水果专家</title>
 
     <style>
@@ -22,7 +23,7 @@
       /*电脑端 隐藏手机端的菜单*/
       @media screen and (min-width: 1204px){
         html{
-          font-size: 36px;
+          font-size: 16px;
         }
         #phone-column{
           display: none;
@@ -32,7 +33,7 @@
       /*手机端隐藏电脑端的菜单*/
       @media screen and (max-width: 1203px){
         html{
-          font-size: 36px;
+          font-size: 20px;
         }
         #main-left-cloumn{
           display: none;
@@ -55,8 +56,7 @@
   </div>
 </nav>
 
-<div class="page-header">
-
+<div class="header">
   <img src="images/head.jpg" class="img-responsive" alt="Cinque Terre">
 </div>
 
@@ -68,7 +68,6 @@
         <img src="images/53df28fe7da1e.jpg" alt="">
         <ul class="nav nav-pills nav-stacked" id="nav-left">
 
-
         </ul>
       </div>
 
@@ -77,15 +76,6 @@
     <!--首页选项卡按钮-->
     <div class="col-md-9" id="meddle-column-home" >
       <ul id="myTab" class="nav nav-tabs">
-        <!--适配手机端的菜单-->
-        <li class="dropdown" id="phone-column">
-          <a href="#" id="phoneTab" class="dropdown-toggle"
-             data-toggle="dropdown">水果分类 <b class="caret"></b>
-          </a>
-          <ul class="dropdown-menu" id="phone-nav-item" role="menu" aria-labelledby="phoneTab">
-
-          </ul>
-        </li><!--适配手机端的菜单结束-->
 
         <li class="active"><a href="#home" data-toggle="tab">
           首页</a>
@@ -143,7 +133,19 @@
             </a>
 
           </div><!--轮播结束-->
+          <!--适配手机端的菜单-->
+          <div class="" id="phone-column">
+            <a id="menu" href="#categoryPopup"  class="ui-btn ui-btn-inline ui-corner-all" data-arrow="t" data-position-to="#demo">水果分类<b class="caret"></b></a>
+            <ul class="nav nav-pills nav-stacked" id="categoryPopup"  style="display: none;position: absolute; z-index: 1;background-color: #F9F9F9">
 
+            </ul>
+
+            <a id="item-title" href="#fruitsPopup" class="ui-btn ui-btn-inline ui-corner-all" data-arrow="t">默认分类<b class="caret"></b></a>
+            <div class="nav nav-pills nav-stacked" id="fruitsPopup" style="position: absolute; z-index: 1;background-color: #F9F9F9;margin-left: 6.5rem">
+
+            </div>
+          </div>
+          <!--适配手机端的菜单结束-->
           <img class="img-responsive" id="fruitsImg" alt="Cinque Terre" src="http://kidle.club:8080/upload/apple.jpg" >
 
         </div>
@@ -193,13 +195,15 @@
     var fruitsList;
     var userAgent = window.navigator.userAgent;
     var click;
-    var agents = ["ipad","iphone","android"]
+    var agents = ["iPad","iPhone","Android"]
     var isMobile
     for (var i = 0;i < agents.length;i++){
-        if (userAgent.indexOf(agents[i])){
+        if (userAgent.indexOf(agents[i])>-1){
             isMobile = true;
+            click ="tap"
         }else {
             isMobile = false;
+            click = "click"
         }
     }
 
@@ -208,22 +212,45 @@
         dataType: "json",
         url:"http://kidle.club:8080/fruitsmanager/get.action",
         success:function (data) {
-            var json = data.data
+            var json = data.data;
             $.each(json,function (i, item) {
 
-                    //适配手机端的分类
-                    $("#phone-nav-item").append(" <div class='poplur' id='phone_div"+i+"' style=\"margin-left:202px; position:absolute; z-index:2;width: 125px\" >\n" +
-                        "<ul class='nav nav-pills nav-stacked' id='phone_list"+i+"' style=''>" +
-                        "</ul>" +
-                        "</div>" +
-                        "<li><a href='#' >"+item.categoryName+"</a></li>")
+                  //适配手机端的分类
+                  $("#categoryPopup").append(" <li id='phone-list"+i+"'>\n" +
+                      "                    <a class='list-item'>"+item.categoryName+"</a>\n" +
+                      "                  </li>")
 
-                    $("#nav-left").append(" <div class='poplur' id='div"+i+"' style=\"margin-left:202px; position:absolute; z-index:2;width: 125px\" >\n" +
-                        "<ul class='nav nav-pills nav-stacked' id='list"+i+"' style='display:none;background-color: white'></ul>" +
-                        "</div>" +
-                        "<li><a href='#' >"+item.categoryName+"</a></li>")
+                  $("#phone-list"+i).on("tap",function () {
+                      fruitsList = item.fruits;
+                      $("#item-title").html(item.categoryName)
+                      $("#fruitsPopup").append(" <ul class='nav nav-pills nav-stacked' id='phone-item"+i+"' style=''></ul>")
+                      if ($("#phone-item"+i).find("li").length<1){
+                          for(var x = 0;x < fruitsList.length;x++){
+                              $("#phone-item"+i).append("<li class='list-item' id='item-btn"+x+"'><a class='chang' javascript:changePhoneImg()>"+item.fruits[x].fruitsName+"</a></li>")
+                          }
+                      }
+                      $("#categoryPopup").hide()
+                      $("#phone-item"+$(this).index()).show()
+                      $("#phone-item"+$(this).index()).siblings().hide()
+                  })
 
-            });
+                  $("#nav-left").append(" <div class='poplur' id='div"+i+"' style=\"margin-left:202px; position:absolute; z-index:2;width: 125px\" >\n" +
+                      "<ul class='nav nav-pills nav-stacked' id='list"+i+"' style='display:none;background-color: white'></ul>" +
+                      "</div>" +
+                      "<li><a href='#' >"+item.categoryName+"</a></li>")
+
+                //手机端切换图片
+                $('body').on("tap",".chang",function () {
+                    for (var i = 0;i<fruitsList.length;i++){
+                        if (fruitsList[i].fruitsName==$(this).text()){
+                            $("#fruitsImg").attr("src",fruitsList[i].fruitsImg)
+
+
+                        }
+                    }
+                })
+
+          });
 
 
 
@@ -240,10 +267,7 @@
                     if((json[j].fruits).length!=0&&isFirst==true){
 
                         for(var s =0;s<(json[j].fruits).length;s++){
-                            $("#list"+j).append("<li><a class='chang' href=\"#\" onclick='changImg()'>"+json[j].fruits[s].fruitsName+"</a></li>")
-
-                            $("#phone_list"+j).append("<li><a class='chang' href=\"#\" onclick='changImg()'>"+json[j].fruits[s].fruitsName+"</a></li>")
-
+                            $("#list"+j).append("<li><a class='chang' href=\"#\" onclick='changeImg()'>"+json[j].fruits[s].fruitsName+"</a></li>")
                         }
 
                     }
@@ -275,29 +299,19 @@
         }
     })
 
-    //切换图片
-    function changImg() {
-
-        //判读是否是移动端
-        if (isMobile){
-            click = "click"
-            alert(click)
-        }else {
-            click ="tap"
-
-            alert(click)
-        }
-
-        $('body').on(click,".chang",function () {
+    //电脑端切换图片
+    function changeImg() {
+        $('body').on("click",".chang",function () {
             for (var i = 0;i<fruitsList.length;i++){
-               if (fruitsList[i].fruitsName==$(this).text()){
-                   $("#fruitsImg").attr("src",fruitsList[i].fruitsImg)
-                   // alert(fruitsList[i].fruitsImg)
-               }
-            }
+                if (fruitsList[i].fruitsName==$(this).text()){
+                    $("#fruitsImg").attr("src",fruitsList[i].fruitsImg)
 
+                }
+            }
+            // alert(fruitsList[i].fruitsImg)
         })
     }
+    //手机端切换图片
 
 </script>
 
@@ -306,6 +320,12 @@
     $(function () {
         $('#myTab li:eq(0) a').tab('show');
     });
+
+    $(function () {
+        $('#menu').on("tap",function () {
+            $("#categoryPopup").show()
+        })
+    })
 
 
 </script>
